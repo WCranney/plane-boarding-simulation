@@ -2,96 +2,140 @@ package main
 
 import()
 
-type Passenger struct {
-    row int
-    col int
-    status string
+
+type Plane struct {
+    Nrows int
+    Ncols int
+    Fuselage [][]Cell
 }
 
-func NewPassenger(row int, col int) *Passenger {
-    p := new(Passenger)
-    p.row = row
-    p.col = col
-    p.status = "standing"
-    return p
-}
+func NewPlane(nrows int, ncols int) *Plane {
+    p := new(Plane)
+    p.Nrows =  nrows
+    p.Ncols = ncols
 
-func (p Passenger) GetState() string {
-    return p.status
-}
-
-type Cell struct {
-    occupant Passenger
-    kind string
-}
-
-func NewCell(kind string) *Cell {
-    c := new(Cell)
-    c.kind = kind
-    return c
-}
-
-type Grid struct {
-    nrows int
-    ncols int
-    grid [][]Cell
-}
-
-func NewGrid(nrows int, ncols int) *Grid {
-    g := new(Grid)
-
-    g.nrows =  nrows
-    g.ncols = ncols
-
-    g.grid = make([][]Cell, nrows)
-    for i := range g.grid {
-        g.grid[i] = make([]Cell, ncols)
+    p.Fuselage = make([][]Cell, nrows)
+    for i := range p.Fuselage {
+        p.Fuselage[i] = make([]Cell, ncols)
     }
 
     for r := 0; r < nrows; r++ {
         for c := 0; c < ncols; c++ {
-            kind := "seat"
-            if (c == ncols/2) { kind = "aisle" }
-            g.grid[r][c] = *NewCell(kind)
+            t := Seat
+            if (c == ncols/2) { t = Aisle }
+            p.Fuselage[r][c] = *NewCell(t)
         }
     }
 
-    return g
+    return p
 }
+
+func (p Plane) CanBoard() bool {
+    return p.Fuselage[0][p.Ncols/2].Passenger == nil
+}
+
+
+type CellType string
+
+const(
+    Seat CellType = "SEAT"
+    Aisle CellType = "AISLE"
+)
+
+type Cell struct {
+    Passenger *Passenger
+    Type CellType
+}
+
+func NewCell(t CellType) *Cell {
+    c := new(Cell)
+    c.Type = t
+    return c
+}
+
+func (c Cell) IsOccupied() bool {
+    return c.Passenger != nil
+}
+
+
+type PassengerState string
+
+const(
+    Waiting = "WAITING"
+    Boarded = "BOARDED"
+    Stowing = "STOWING"
+    Seated = "SEATED"
+)
+
+type Passenger struct {
+    Row int
+    Col int
+    State string
+    Cell *Cell
+}
+
+func NewPassenger(row int, col int) *Passenger {
+    p := new(Passenger)
+    p.Row = row
+    p.Col = col
+    p.State = Waiting
+    return p
+}
+
+func (p Passenger) MoveTo(to Cell) {
+    if (p.Cell != nil) {
+        p.Cell.Passenger = nil
+    }
+    to.Passenger = &p
+    p.Cell = &to
+}
+
 
 func AllPassengersSeated(passengers []Passenger) bool {
     for _, p := range passengers {
-        if (p.GetState() != "seated") {
-            return false
-        }
+        if (p.State != Seated) { return false }
     }
     return true
 }
 
+
 func main() {
 
-    // initialize plane - 27 rows, 7 cols (3 seats left/right and middle aisle)
-    plane := NewGrid(27, 7)
+    plane := *NewPlane(27, 7)
 
-    // initizlize some set of passengers
     passengers := make([]Passenger, 3)
     passengers[0] = *NewPassenger(27,1)
     passengers[1] = *NewPassenger(7,2)
     passengers[2] = *NewPassenger(5,2)
 
-
-    // while not all passengers seated
     for !AllPassengersSeated(passengers) {
 
         // shuffle passengers here
 
-        for _, p := range passengers {
-            state := p.GetState()
-            switch state {
-            case "waiting":
-                // FOLLOW ON HERE
+        // run through each of the aisle rows
+        c := plane.Ncols/2
+        for r := plane.Nrows-1; r >= 0; r-- {
+
+            // if the row's occupied
+            if (plane.Fuselage[r][c].Passenger != nil) {
+                p := plane.Fuselage[r][c].Passenger
+
+                switch p.State {
+
+                case Waiting:
+                    if (p.Row == r) {
+                        p.State = Stowing
+                    } else {
+                        p.MoveTo(plane.Fuselage[r+1][c])
+                    }
+
+                case Stowing:
+                    p.MoveTo(plane.Fuselage[p.Row][p.Col])
+
+                }
             }
         }
+
     }
 
     // shuffle passengers
