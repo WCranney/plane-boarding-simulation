@@ -19,25 +19,66 @@ public class Passenger {
         }
     }
 
+    private enum State {
+        WAITING, BOARDING, STOWING, SITTING
+    }
+
     private Cell loc;
     private Ticket ticket;
+    private State state;
 
     public Passenger(int row, int col) {
         this.ticket = new Ticket(row, col);
         this.loc = null;
+        this.state = Passenger.State.WAITING;
     }
 
     public Cell getLoc() {
         return loc;
     }
 
-    public Ticket getTicket() {
-        return ticket; 
+    public int getTicketRow() {
+        return ticket.getRow(); 
+    }
+
+    public int getTicketCol() {
+        return ticket.getCol(); 
     }
 
     public void move(Cell from, Cell to) {
         from.setPassenger(null);
         to.setPassenger(this);
         this.loc = to;
+    }
+
+    public void move(Cell to) {
+        if (this.loc != null) {  this.loc.setPassenger(null); }
+        to.setPassenger(this);
+        this.loc = to;
+    }
+
+    public boolean isWaiting() {
+        return this.state == Passenger.State.WAITING;    
+    }
+
+    public boolean isBoarding() {
+        return this.state == Passenger.State.BOARDING;
+    }
+
+    public boolean isStowing() {
+        return this.state == Passenger.State.STOWING;
+    }
+
+    public boolean isSitting() {
+        return this.state == Passenger.State.SITTING;
+    }
+
+    public boolean atTicketedRow() {
+        if (this.loc == null) { return false; }
+        return this.loc.getRow() == this.getTicketRow();
+    }
+
+    public void stowLuggage() {
+        this.state = State.STOWING;
     }
 }

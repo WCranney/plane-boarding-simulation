@@ -9,4 +9,9 @@ public class Plane {
         this.ncols = ncols;
         this.grid = new Cell[nrows][ncols];
     }
+
+    public Cell getCell(int r, int c) {
+        System.out.println("asiubfiusadbfo");
+        return grid[r][c];
+    }
 }
