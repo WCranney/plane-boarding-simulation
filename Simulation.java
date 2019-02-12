@@ -3,7 +3,7 @@ import java.util.Random;
 public class Simulation {
 
     public static int N_PLANE_ROWS = 10;
-    public static int N_PLANE_COLS = 3;
+    public static int N_PLANE_COLS = 7;
     public static int N_PASSENGERS = N_PLANE_ROWS * (N_PLANE_COLS-1);
 
     public static void main(String[] args) {
@@ -39,7 +39,6 @@ public class Simulation {
         int aisle = N_PLANE_COLS/2;
         for (int r = 0; r < N_PLANE_ROWS; r++) {
 
-            System.out.println(r);
             Cell c = plane.getCell(r, aisle);
             Passenger p = plane.getCell(r, aisle).getPassenger();
             if (p == null) {

@@ -19,7 +19,6 @@ public class Cell {
     }
 
     public Passenger getPassenger() {
-        System.out.println("herehrh");
         return passenger; 
     }
 

@@ -7,11 +7,20 @@ public class Plane {
     public Plane(int nrows, int ncols) {
         this.nrows = nrows;
         this.ncols = ncols;
-        this.grid = new Cell[nrows][ncols];
+        this.grid = initializeGrid(nrows, ncols);
     }
 
     public Cell getCell(int r, int c) {
-        System.out.println("asiubfiusadbfo");
         return grid[r][c];
+    }
+
+    private Cell[][] initializeGrid(int nrows, int ncols) {
+        Cell[][] grid = new Cell[nrows][ncols]; 
+        for (int r = 0; r < nrows; r++) {
+            for (int c = 0; c < ncols; c++) {
+                grid[r][c] = new Cell(r, c);
+            }
+        }
+        return grid;
     }
 }
