@@ -20,11 +20,12 @@ public class World implements GLEventListener{
     public static double PASSENGER_RADIUS = 0.25;
     public static double SEAT_OFFSET = 0.2;
     
-    private static Passenger[] state;
+    private static Plane state;
 	
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
+		System.out.println("display called");
 		GL2 gl = drawable.getGL().getGL2();
 		
 		// clear colour buffer
@@ -39,17 +40,23 @@ public class World implements GLEventListener{
 	
 	// draw the location of each passenger
 	private void drawState(GL2 gl) {
-		for(Passenger p: state) {
-			if(p == null || p.getLoc() == null) continue;
-			drawPassenger(gl, p);
-		}
+		System.out.println("Drawing state");
+		Passenger p;
+		for (int r = 0; r < state.nrows; r++) {
+            for (int c = 0; c < state.ncols; c++) {
+            	p = state.grid[r][c].getPassenger();
+            	if(p == null) continue;
+    			System.out.println("(" + p.getLoc().getRow() + ", " + p.getLoc().getCol() + ")");
+            	drawPassenger(gl, p);
+            }
+        }
 	}
 	
 	// draws the passenger as a circle
 	private void drawPassenger(GL2 gl, Passenger p) {
-		
-		double passenger_row = p.getLoc().getRow()+0.5;
-		double passenger_col = p.getLoc().getCol()+0.5;
+		double offset = 0.5;
+		double p_row = p.getLoc().getRow() + offset;
+		double p_col = p.getLoc().getCol() + offset;
 		
 		gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
@@ -58,7 +65,7 @@ public class World implements GLEventListener{
 
 		gl.glBegin(GL2.GL_TRIANGLE_FAN);
 	    // set the centre of the circle
-	    gl.glVertex2d(passenger_row, passenger_col); //The centre of the circle
+	    gl.glVertex2d(p_row, p_col); //The centre of the circle
 	    
 	    // draw circle
 		double angle = 0;
@@ -67,7 +74,7 @@ public class World implements GLEventListener{
 	        angle = i * angleIncrement;
 	        double x = PASSENGER_RADIUS * Math.cos(angle);
 	        double y = PASSENGER_RADIUS * Math.sin(angle);
-	        gl.glVertex2d(x+passenger_row, y+passenger_col);
+	        gl.glVertex2d(x+p_row, y+p_col);
 		}
 		gl.glEnd();
 	}
@@ -86,14 +93,9 @@ public class World implements GLEventListener{
 	    		gl.glVertex2d(r, c+1);
 	    		gl.glVertex2d(r+1, c+1);
 	    		gl.glVertex2d(r+1, c);
-	    		
 	    	}
 	    }
 	    gl.glEnd();	    
-	}
-	
-	public void updateState(Passenger[] passengers) {
-		state = passengers;
 	}
 
 	@Override
@@ -122,7 +124,7 @@ public class World implements GLEventListener{
 		glu.gluOrtho2D(-BORDER_SIZE, N_PLANE_ROWS+BORDER_SIZE, -BORDER_SIZE, N_PLANE_COLS+BORDER_SIZE);
 	}
 	
-	World() {
+	World(Plane plane) {
 		GLProfile profile = GLProfile.get(GLProfile.GL2);
 	    GLCapabilities capabilities = new GLCapabilities(profile);
 	    GLJPanel canvas = new GLJPanel(capabilities);
@@ -143,7 +145,7 @@ public class World implements GLEventListener{
 	    //animator.start();
 	    
 	    // initialise the state, the location of passengers at a given time
-	    state = new Passenger[N_PASSENGERS];
+	    state = plane;
 	}
 
 }

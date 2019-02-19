@@ -8,7 +8,6 @@ public class Simulation {
 
     public static void main(String[] args) {
     	
-    	World w = new World();
 
         // plane lands
         Plane plane = new Plane(N_PLANE_ROWS, N_PLANE_COLS);
@@ -22,11 +21,14 @@ public class Simulation {
                 passengers[p++] = new Passenger(r, c);
             }
         }
-
+        
+    	World w = new World(plane);
+    	
         // passengers passengers board
         while (!allPassengersSeated(passengers)) {
-            run(plane, passengers);
+            run(plane, passengers, w);
         }
+                
     }
 
     public static boolean allPassengersSeated(Passenger[] passengers) {
@@ -36,7 +38,7 @@ public class Simulation {
         return true;
     }
 
-    public static void run(Plane plane, Passenger[] passengers) {
+    public static void run(Plane plane, Passenger[] passengers, World w) {
 
         int aisle = N_PLANE_COLS/2;
         for (int r = 0; r < N_PLANE_ROWS; r++) {
@@ -77,6 +79,7 @@ public class Simulation {
                  }
             }
         }
+
     }
 
     public static Passenger[] shuffle(Passenger[] passengers) {
