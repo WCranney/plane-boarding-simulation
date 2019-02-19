@@ -1,4 +1,6 @@
 public class Cell {
+	
+	public enum CellType { SEAT, AISLE }
 
     int row;
     int col;
