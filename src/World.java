@@ -1,3 +1,5 @@
+import java.util.Random;
+
 import javax.swing.JFrame;
 
 import com.jogamp.opengl.GL2;
@@ -19,6 +21,7 @@ public class World implements GLEventListener{
     public static int NUM_VERTICES = 16;
     public static double PASSENGER_RADIUS = 0.25;
     public static double SEAT_OFFSET = 0.2;
+    public static int MAX_INT = 2147483647;
     
     private static Plane state;
 	
@@ -66,8 +69,13 @@ public class World implements GLEventListener{
 		
 		gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
+        
 		// set the colour to red
-        gl.glColor3f(0.8f, 0, 0);
+        int r = MAX_INT/(p.getTicketRow()+1);
+        int g = MAX_INT/(p.getTicketCol()+1);
+        int b = MAX_INT/2;
+        
+        gl.glColor3i(r, g, b);
 
 		gl.glBegin(GL2.GL_TRIANGLE_FAN);
 	    // set the centre of the circle
@@ -146,7 +154,7 @@ public class World implements GLEventListener{
 	    // quit on window close
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
-	    FPSAnimator animator = new FPSAnimator(1);
+	    FPSAnimator animator = new FPSAnimator(2);
 	    animator.add(canvas);
 	    animator.start();
 	    
