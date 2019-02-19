@@ -36,11 +36,11 @@ public class World implements GLEventListener{
 		
 	    drawPlane(gl);
 	    drawState(gl);
+		System.out.println("display finished");
 	}
 	
 	// draw the location of each passenger
 	private void drawState(GL2 gl) {
-		System.out.println("Drawing state");
 		Passenger p;
 		for (int r = 0; r < state.nrows; r++) {
             for (int c = 0; c < state.ncols; c++) {

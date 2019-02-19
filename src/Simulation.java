@@ -40,6 +40,7 @@ public class Simulation {
     }
 
     public static void run(Plane plane, Passenger[] passengers, World w) {
+    	System.out.println("run called");
     	
         int aisle = N_PLANE_COLS/2;
         for (int r = 0; r < N_PLANE_ROWS; r++) {
@@ -52,20 +53,23 @@ public class Simulation {
             
             // if boarding ...
             if (p.isBoarding()) {
-            	System.out.println("Boarding");
                 // ... might have just arrived at assigned row 
                 if (p.atTicketedRow()) {
+                	//System.out.println("at ticketed row");
                     p.stowLuggage();
                 // ... or the row might still be ahead
                 } else {
-                    Cell toCell = plane.getCell(p.getTicketRow(), aisle);
-                    p.move(toCell);
+                	//System.out.println("not at ticketed row");
+                    Cell toCell = plane.getCell(r + 1, aisle);
+                    if (!toCell.isOccupied()) {
+                    	//System.out.println("moving forward");
+                    	p.move(toCell);
+                    }
                 }
             }
 
             // if just stowed luggage, ready to sit
             if (p.isStowing()) {
-            	System.out.println("Stowing");
                 Cell toCell = plane.getCell(p.getTicketRow(), p.getTicketCol());
                 p.move(toCell);
             }
@@ -83,13 +87,14 @@ public class Simulation {
             }
         }
         
+        System.out.println("run finished");
         // wait a second to sync with render
         try {
         	TimeUnit.SECONDS.sleep(1);
         } catch(Exception e) {
         	
         };
-        
+    	
     }
 
     public static Passenger[] shuffle(Passenger[] passengers) {
