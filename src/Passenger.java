@@ -56,6 +56,11 @@ public class Passenger {
         to.setPassenger(this);
         this.loc = to;
     }
+    
+    public void board(Cell to) {
+    	move(to);
+    	this.state = Passenger.State.BOARDING;
+    }
 
     public boolean isWaiting() {
         return this.state == Passenger.State.WAITING;    
