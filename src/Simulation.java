@@ -7,6 +7,8 @@ public class Simulation {
     public static int N_PASSENGERS = N_PLANE_ROWS * (N_PLANE_COLS-1);
 
     public static void main(String[] args) {
+    	
+    	World w = new World();
 
         // plane lands
         Plane plane = new Plane(N_PLANE_ROWS, N_PLANE_COLS);
