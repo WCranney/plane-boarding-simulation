@@ -29,4 +29,8 @@ public class Cell {
     public boolean isOccupied() {
         return this.passenger != null;
     }
+    
+    public String toString() {
+    	return String.format("Cell(%d, %d)", this.row, this.col);
+    }
 }

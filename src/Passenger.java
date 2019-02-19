@@ -61,6 +61,11 @@ public class Passenger {
     	move(to);
     	this.state = Passenger.State.BOARDING;
     }
+    
+    public void sit(Cell to) {
+    	move(to);
+    	this.state = Passenger.State.SITTING;
+    }
 
     public boolean isWaiting() {
         return this.state == Passenger.State.WAITING;    
@@ -85,5 +90,10 @@ public class Passenger {
 
     public void stowLuggage() {
         this.state = State.STOWING;
+    }
+    
+    public String toString() {
+    	return String.format("Passenger(%d,%d)[%s]",
+    			ticket.getRow(), ticket.getCol(), state.toString());
     }
 }

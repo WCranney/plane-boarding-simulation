@@ -25,7 +25,7 @@ public class World implements GLEventListener{
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		// TODO Auto-generated method stub
-		System.out.println("display called");
+		//System.out.println("display called");
 		GL2 gl = drawable.getGL().getGL2();
 		
 		// clear colour buffer
@@ -36,7 +36,7 @@ public class World implements GLEventListener{
 		
 	    drawPlane(gl);
 	    drawState(gl);
-		System.out.println("display finished");
+		//System.out.println("display finished");
 	}
 	
 	// draw the location of each passenger
@@ -57,14 +57,17 @@ public class World implements GLEventListener{
 	
 	// draws the passenger as a circle
 	private void drawPassenger(GL2 gl, Passenger p) {
+		
 		double offset = 0.5;
 		double p_row = p.getLoc().getRow() + offset;
 		double p_col = p.getLoc().getCol() + offset;
 		
+		System.out.println("Drawing passenger at "+p.getLoc().getRow()+","+p.getLoc().getCol());
+		
 		gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_LINE);
         gl.glPolygonMode(GL2.GL_FRONT_AND_BACK, GL2.GL_FILL);
-		// set the colour to black
-        gl.glColor3f(0.5f, 0, 0);
+		// set the colour to red
+        gl.glColor3f(0.8f, 0, 0);
 
 		gl.glBegin(GL2.GL_TRIANGLE_FAN);
 	    // set the centre of the circle
