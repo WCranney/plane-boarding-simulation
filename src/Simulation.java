@@ -1,4 +1,5 @@
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Simulation {
 
@@ -39,7 +40,7 @@ public class Simulation {
     }
 
     public static void run(Plane plane, Passenger[] passengers, World w) {
-
+    	
         int aisle = N_PLANE_COLS/2;
         for (int r = 0; r < N_PLANE_ROWS; r++) {
 
@@ -51,6 +52,7 @@ public class Simulation {
             
             // if boarding ...
             if (p.isBoarding()) {
+            	System.out.println("Boarding");
                 // ... might have just arrived at assigned row 
                 if (p.atTicketedRow()) {
                     p.stowLuggage();
@@ -63,6 +65,7 @@ public class Simulation {
 
             // if just stowed luggage, ready to sit
             if (p.isStowing()) {
+            	System.out.println("Stowing");
                 Cell toCell = plane.getCell(p.getTicketRow(), p.getTicketCol());
                 p.move(toCell);
             }
@@ -74,12 +77,19 @@ public class Simulation {
             passengers = shuffle(passengers);
             for (Passenger p : passengers) {
                  if (p.isWaiting()) {
-                     p.move(entrance);
+                     p.board(entrance);
                      break;
                  }
             }
         }
-
+        
+        // wait a second to sync with render
+        try {
+        	TimeUnit.SECONDS.sleep(1);
+        } catch(Exception e) {
+        	
+        };
+        
     }
 
     public static Passenger[] shuffle(Passenger[] passengers) {

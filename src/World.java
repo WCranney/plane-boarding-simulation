@@ -44,10 +44,13 @@ public class World implements GLEventListener{
 		Passenger p;
 		for (int r = 0; r < state.nrows; r++) {
             for (int c = 0; c < state.ncols; c++) {
+            	// get passenger in each cell
             	p = state.grid[r][c].getPassenger();
             	if(p == null) continue;
-    			System.out.println("(" + p.getLoc().getRow() + ", " + p.getLoc().getCol() + ")");
+    			// render the passenger
             	drawPassenger(gl, p);
+    			//System.out.println("Passenger is at (" + p.getLoc().getRow() + ", " + p.getLoc().getCol() + ")");
+
             }
         }
 	}
@@ -140,9 +143,9 @@ public class World implements GLEventListener{
 	    // quit on window close
 	    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    
-	    //FPSAnimator animator = new FPSAnimator(60);
-	    //animator.add(canvas);
-	    //animator.start();
+	    FPSAnimator animator = new FPSAnimator(1);
+	    animator.add(canvas);
+	    animator.start();
 	    
 	    // initialise the state, the location of passengers at a given time
 	    state = plane;
