@@ -11,9 +11,11 @@ public class Simulation {
     	
 
         // plane lands
+    	System.out.println("ANNOUNCEMENT: the plane has landed");
         Plane plane = new Plane(N_PLANE_ROWS, N_PLANE_COLS);
 
         // all passengers are waiting at the gate
+        System.out.println("ANNOUNCEMENT: passengers assembled and waiting");
         Passenger[] passengers = new Passenger[N_PASSENGERS];
         int p = 0;
         for (int r = 0; r < N_PLANE_ROWS; r++) {
@@ -40,39 +42,40 @@ public class Simulation {
     }
 
     public static void run(Plane plane, Passenger[] passengers, World w) {
-    	System.out.println("run called");
     	
         int aisle = N_PLANE_COLS/2;
-        for (int r = 0; r < N_PLANE_ROWS; r++) {
+        for (int r = N_PLANE_ROWS - 1; r >= 0; r--) {
 
-            Cell c = plane.getCell(r, aisle);
             Passenger p = plane.getCell(r, aisle).getPassenger();
             if (p == null) {
                 continue;
             }
             
+            // passenger state before moving
+            System.out.println("BEFORE: " + p.toString() + " is at " + p.getLoc().toString());
+            
             // if boarding ...
             if (p.isBoarding()) {
                 // ... might have just arrived at assigned row 
                 if (p.atTicketedRow()) {
-                	//System.out.println("at ticketed row");
                     p.stowLuggage();
                 // ... or the row might still be ahead
                 } else {
-                	//System.out.println("not at ticketed row");
                     Cell toCell = plane.getCell(r + 1, aisle);
                     if (!toCell.isOccupied()) {
-                    	//System.out.println("moving forward");
                     	p.move(toCell);
                     }
                 }
             }
 
             // if just stowed luggage, ready to sit
-            if (p.isStowing()) {
+            else if (p.isStowing()) {
                 Cell toCell = plane.getCell(p.getTicketRow(), p.getTicketCol());
-                p.move(toCell);
+                p.sit(toCell);
             }
+            
+            // passenger state after moving
+            System.out.println("AFTER: " + p.toString() + " is at " + p.getLoc().toString());
         }
 
         // if entrance is free, then board
@@ -87,13 +90,12 @@ public class Simulation {
             }
         }
         
-        System.out.println("run finished");
         // wait a second to sync with render
         try {
         	TimeUnit.SECONDS.sleep(1);
         } catch(Exception e) {
-        	
-        };
+        	// no exception handling
+        }
     	
     }
 
